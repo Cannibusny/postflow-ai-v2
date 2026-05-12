@@ -1,0 +1,39 @@
+{
+  "name": "postflow-ai-v2",
+  "version": "1.0.0",
+  "description": "PostFlow AI — Sovereign Instagram Command Center",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "concurrently \"nodemon src/index.js\" \"npm run client:dev\"",
+    "dev:server": "nodemon src/index.js",
+    "client:dev": "cd client && npx vite --port 5173",
+    "client:build": "cd client && npx vite build",
+    "build": "npm run client:build",
+    "lint": "eslint src/ --ext .js",
+    "seed": "node src/seed.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "cron": "^3.1.7",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "joi": "^17.13.3",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.3",
+    "uuid": "^11.1.0",
+    "winston": "^3.17.0",
+    "@supabase/supabase-js": "^2.49.1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "eslint": "^8.57.1",
+    "nodemon": "^3.1.9"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
