@@ -9,6 +9,11 @@ const { apiLimiter } = require('./middleware/rateLimiter');
 const postsRouter = require('./routes/posts');
 const analyticsRouter = require('./routes/analytics');
 const queueRouter = require('./routes/queue');
+const teamRouter = require('./routes/team');
+const approvalsRouter = require('./routes/approvals');
+const notesRouter = require('./routes/notes');
+const monitoringRouter = require('./routes/monitoring');
+const reportsRouter = require('./routes/reports');
 const scheduler = require('./jobs/scheduler');
 
 const app = express();
@@ -39,6 +44,11 @@ app.get('/health', (_req, res) => {
 app.use('/api/posts', authMiddleware, postsRouter);
 app.use('/api/analytics', authMiddleware, analyticsRouter);
 app.use('/api/queue', authMiddleware, queueRouter);
+app.use('/api/team', authMiddleware, teamRouter);
+app.use('/api/approvals', authMiddleware, approvalsRouter);
+app.use('/api/notes', authMiddleware, notesRouter);
+app.use('/api/monitoring', authMiddleware, monitoringRouter);
+app.use('/api/reports', authMiddleware, reportsRouter);
 
 // --------------- Serve React dashboard ---------------
 const clientDist = path.join(__dirname, '..', 'client', 'dist');

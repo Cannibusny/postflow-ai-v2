@@ -53,6 +53,62 @@ export const api = {
     apiFetch('/queue/reorder', { method: 'PUT', body: JSON.stringify({ order }) }),
   toggleQueuePause: (paused) =>
     apiFetch('/queue/pause', { method: 'POST', body: JSON.stringify({ paused }) }),
+
+  // Team
+  getTeamMembers: () => apiFetch('/team'),
+  addTeamMember: (data) =>
+    apiFetch('/team', { method: 'POST', body: JSON.stringify(data) }),
+  updateTeamMember: (id, data) =>
+    apiFetch(`/team/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteTeamMember: (id) => apiFetch(`/team/${id}`, { method: 'DELETE' }),
+  getActivityFeed: (limit) =>
+    apiFetch(`/team/activity${limit ? `?limit=${limit}` : ''}`),
+
+  // Approvals
+  getPendingApprovals: (status) =>
+    apiFetch(`/approvals${status ? `?status=${status}` : ''}`),
+  approvePost: (id, approved_by) =>
+    apiFetch(`/approvals/${id}/approve`, { method: 'POST', body: JSON.stringify({ approved_by }) }),
+  requestChanges: (id, actor_id, notes) =>
+    apiFetch(`/approvals/${id}/request-changes`, { method: 'POST', body: JSON.stringify({ actor_id, notes }) }),
+  resubmitPost: (id, actor_id) =>
+    apiFetch(`/approvals/${id}/resubmit`, { method: 'POST', body: JSON.stringify({ actor_id }) }),
+  batchApprove: (post_ids, approved_by) =>
+    apiFetch('/approvals/batch-approve', { method: 'POST', body: JSON.stringify({ post_ids, approved_by }) }),
+  getApprovalLog: (id) => apiFetch(`/approvals/${id}/log`),
+
+  // Notes
+  getPostNotes: (postId) => apiFetch(`/notes/${postId}`),
+  addPostNote: (postId, data) =>
+    apiFetch(`/notes/${postId}`, { method: 'POST', body: JSON.stringify(data) }),
+  deletePostNote: (postId, noteId) =>
+    apiFetch(`/notes/${postId}/${noteId}`, { method: 'DELETE' }),
+
+  // Monitoring
+  getMonitoringKeywords: () => apiFetch('/monitoring/keywords'),
+  addMonitoringKeyword: (data) =>
+    apiFetch('/monitoring/keywords', { method: 'POST', body: JSON.stringify(data) }),
+  deleteMonitoringKeyword: (id) =>
+    apiFetch(`/monitoring/keywords/${id}`, { method: 'DELETE' }),
+  getMentions: (params) => {
+    const qs = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch(`/monitoring/mentions${qs}`);
+  },
+  updateMention: (id, data) =>
+    apiFetch(`/monitoring/mentions/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  getMonitoringStats: () => apiFetch('/monitoring/stats'),
+
+  // Reports
+  getReports: () => apiFetch('/reports'),
+  createReport: (data) =>
+    apiFetch('/reports', { method: 'POST', body: JSON.stringify(data) }),
+  getReport: (id) => apiFetch(`/reports/${id}`),
+  deleteReport: (id) => apiFetch(`/reports/${id}`, { method: 'DELETE' }),
+  getScheduledReports: () => apiFetch('/reports/scheduled/list'),
+  createScheduledReport: (data) =>
+    apiFetch('/reports/scheduled', { method: 'POST', body: JSON.stringify(data) }),
+  deleteScheduledReport: (id) =>
+    apiFetch(`/reports/scheduled/${id}`, { method: 'DELETE' }),
 };
 
 export const PLATFORMS = [

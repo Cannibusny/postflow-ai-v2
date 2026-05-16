@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, NavLink, useNavigate } from 'react-router-dom';
 import {
   CalendarDays,
@@ -7,22 +7,43 @@ import {
   PenSquare,
   Zap,
   Plus,
+  CheckCircle,
+  Radio,
+  FileText,
+  Users,
+  Upload,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 import PostQueue from './pages/PostQueue';
 import CalendarView from './pages/CalendarView';
 import Analytics from './pages/Analytics';
 import PostDetail from './pages/PostDetail';
 import Compose from './pages/Compose';
+import Approvals from './pages/Approvals';
+import Monitoring from './pages/Monitoring';
+import Reports from './pages/Reports';
+import Team from './pages/Team';
+import BulkUpload from './pages/BulkUpload';
 
-const navItems = [
+const primaryNav = [
   { to: '/', icon: ListChecks, label: 'Queue' },
   { to: '/calendar', icon: CalendarDays, label: 'Calendar' },
   { to: '/compose', icon: PenSquare, label: 'Compose' },
   { to: '/analytics', icon: BarChart3, label: 'Analytics' },
 ];
 
+const secondaryNav = [
+  { to: '/approvals', icon: CheckCircle, label: 'Approvals' },
+  { to: '/monitoring', icon: Radio, label: 'Listening' },
+  { to: '/reports', icon: FileText, label: 'Reports' },
+  { to: '/team', icon: Users, label: 'Team' },
+  { to: '/bulk-upload', icon: Upload, label: 'Bulk Upload' },
+];
+
 export default function App() {
   const navigate = useNavigate();
+  const [showMore, setShowMore] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-950 text-gray-100">
@@ -40,13 +61,13 @@ export default function App() {
           </div>
 
           <nav className="flex items-center gap-1">
-            {navItems.map(({ to, icon: Icon, label }) => (
+            {primaryNav.map(({ to, icon: Icon, label }) => (
               <NavLink
                 key={to}
                 to={to}
                 end={to === '/'}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  `flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                     isActive
                       ? 'bg-purple-500/20 text-purple-400'
                       : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
@@ -57,6 +78,43 @@ export default function App() {
                 {label}
               </NavLink>
             ))}
+
+            {/* More dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setShowMore(!showMore)}
+                className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  showMore ? 'bg-gray-800 text-gray-200' : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
+                }`}
+              >
+                More
+                {showMore ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+              </button>
+              {showMore && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setShowMore(false)} />
+                  <div className="absolute right-0 top-full mt-1 w-48 bg-gray-900 border border-gray-800 rounded-xl shadow-xl z-50 py-1">
+                    {secondaryNav.map(({ to, icon: Icon, label }) => (
+                      <NavLink
+                        key={to}
+                        to={to}
+                        onClick={() => setShowMore(false)}
+                        className={({ isActive }) =>
+                          `flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors ${
+                            isActive
+                              ? 'bg-purple-500/20 text-purple-400'
+                              : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
+                          }`
+                        }
+                      >
+                        <Icon className="w-4 h-4" />
+                        {label}
+                      </NavLink>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
           </nav>
 
           <button
@@ -77,6 +135,11 @@ export default function App() {
           <Route path="/compose" element={<Compose />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/posts/:id" element={<PostDetail />} />
+          <Route path="/approvals" element={<Approvals />} />
+          <Route path="/monitoring" element={<Monitoring />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/team" element={<Team />} />
+          <Route path="/bulk-upload" element={<BulkUpload />} />
         </Routes>
       </main>
     </div>
