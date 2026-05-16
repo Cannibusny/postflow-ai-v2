@@ -34,6 +34,10 @@ export default function Approvals() {
     loadPosts();
   }, [filter]);
 
+  useEffect(() => {
+    setChangeNotes('');
+  }, [expandedPost]);
+
   async function loadPosts() {
     setLoading(true);
     try {

@@ -146,7 +146,15 @@ export default function BulkUpload() {
 
   function handleDeleteRow(index) {
     setRows((prev) => {
+      const removed = prev[index];
       const updated = prev.filter((_, i) => i !== index);
+      if (removed) {
+        setErrors((prevErrs) => {
+          const next = { ...prevErrs };
+          delete next[removed._rowIndex];
+          return next;
+        });
+      }
       return updated;
     });
   }
