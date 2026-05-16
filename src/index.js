@@ -8,6 +8,7 @@ const { authMiddleware } = require('./middleware/auth');
 const { apiLimiter } = require('./middleware/rateLimiter');
 const postsRouter = require('./routes/posts');
 const analyticsRouter = require('./routes/analytics');
+const queueRouter = require('./routes/queue');
 const scheduler = require('./jobs/scheduler');
 
 const app = express();
@@ -37,6 +38,7 @@ app.get('/health', (_req, res) => {
 // --------------- API routes (auth required) ---------------
 app.use('/api/posts', authMiddleware, postsRouter);
 app.use('/api/analytics', authMiddleware, analyticsRouter);
+app.use('/api/queue', authMiddleware, queueRouter);
 
 // --------------- Serve React dashboard ---------------
 const clientDist = path.join(__dirname, '..', 'client', 'dist');

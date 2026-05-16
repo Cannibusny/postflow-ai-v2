@@ -1,25 +1,29 @@
 import React from 'react';
-import { Routes, Route, NavLink } from 'react-router-dom';
+import { Routes, Route, NavLink, useNavigate } from 'react-router-dom';
 import {
   CalendarDays,
   ListChecks,
   BarChart3,
-  Instagram,
+  PenSquare,
   Zap,
+  Plus,
 } from 'lucide-react';
-import Dashboard from './pages/Dashboard';
 import PostQueue from './pages/PostQueue';
 import CalendarView from './pages/CalendarView';
 import Analytics from './pages/Analytics';
 import PostDetail from './pages/PostDetail';
+import Compose from './pages/Compose';
 
 const navItems = [
   { to: '/', icon: ListChecks, label: 'Queue' },
   { to: '/calendar', icon: CalendarDays, label: 'Calendar' },
+  { to: '/compose', icon: PenSquare, label: 'Compose' },
   { to: '/analytics', icon: BarChart3, label: 'Analytics' },
 ];
 
 export default function App() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-gray-950 text-gray-100">
       {/* Header */}
@@ -31,7 +35,7 @@ export default function App() {
             </div>
             <div>
               <h1 className="text-lg font-bold tracking-tight">PostFlow AI</h1>
-              <p className="text-xs text-gray-500">Sovereign Command Center</p>
+              <p className="text-xs text-gray-500">Professional Edition</p>
             </div>
           </div>
 
@@ -55,10 +59,13 @@ export default function App() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2 text-sm text-gray-500">
-            <Instagram className="w-4 h-4" />
-            @cannibus_ny
-          </div>
+          <button
+            onClick={() => navigate('/compose')}
+            className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg text-sm font-medium transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            New Post
+          </button>
         </div>
       </header>
 
@@ -67,6 +74,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<PostQueue />} />
           <Route path="/calendar" element={<CalendarView />} />
+          <Route path="/compose" element={<Compose />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/posts/:id" element={<PostDetail />} />
         </Routes>

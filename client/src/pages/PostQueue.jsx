@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Clock,
   CheckCircle2,
@@ -10,9 +10,11 @@ import {
   Trash2,
   Plus,
   RefreshCw,
+  PenSquare,
 } from 'lucide-react';
 import { usePosts } from '../hooks/usePosts';
 import { api } from '../utils/api';
+import { PlatformBadgeRow } from '../components/PlatformBadge';
 import CreatePostModal from '../components/CreatePostModal';
 
 const STATUS_CONFIG = {
@@ -23,6 +25,7 @@ const STATUS_CONFIG = {
 };
 
 export default function PostQueue() {
+  const navigate = useNavigate();
   const [filter, setFilter] = useState('');
   const { posts, loading, error, refetch } = usePosts(filter ? { status: filter } : {});
   const [showCreate, setShowCreate] = useState(false);
@@ -86,7 +89,7 @@ export default function PostQueue() {
             <RefreshCw className="w-4 h-4" />
           </button>
           <button
-            onClick={() => setShowCreate(true)}
+            onClick={() => navigate('/compose')}
             className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg text-sm font-medium transition-colors"
           >
             <Plus className="w-4 h-4" />
@@ -165,6 +168,7 @@ export default function PostQueue() {
                     </p>
 
                     <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                      <PlatformBadgeRow platforms={post.platforms || ['instagram']} />
                       <span>Week {post.week_number}</span>
                       {post.scheduled_date && (
                         <span>
