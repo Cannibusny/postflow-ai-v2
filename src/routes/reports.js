@@ -57,6 +57,23 @@ router.post('/', apiLimiter, async (req, res, next) => {
   }
 });
 
+// ---- Scheduled Reports (must be above /:id to avoid param capture) ----
+
+// GET /api/reports/scheduled/list
+router.get('/scheduled/list', async (_req, res, next) => {
+  try {
+    const { data, error } = await supabase
+      .from('scheduled_reports')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    res.json({ schedules: data || [] });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // GET /api/reports/:id — get single report
 router.get('/:id', async (req, res, next) => {
   try {
@@ -85,23 +102,6 @@ router.delete('/:id', async (req, res, next) => {
     if (error) throw error;
     logger.info(`Report deleted: ${req.params.id}`);
     res.json({ message: 'Report deleted' });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// ---- Scheduled Reports ----
-
-// GET /api/reports/scheduled/list
-router.get('/scheduled/list', async (_req, res, next) => {
-  try {
-    const { data, error } = await supabase
-      .from('scheduled_reports')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-    res.json({ schedules: data || [] });
   } catch (err) {
     next(err);
   }

@@ -6,7 +6,6 @@ import {
   CheckCircle,
   AlertCircle,
   X,
-  Edit3,
   Trash2,
   Send,
 } from 'lucide-react';

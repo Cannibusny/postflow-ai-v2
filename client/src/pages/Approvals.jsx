@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   CheckCircle,
-  XCircle,
   Clock,
   MessageSquare,
   ChevronDown,
@@ -101,8 +100,6 @@ export default function Approvals() {
       return next;
     });
   }
-
-  const counts = { pending: 0, approved: 0, changes_requested: 0 };
 
   return (
     <div className="space-y-6">

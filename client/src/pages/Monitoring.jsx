@@ -4,7 +4,6 @@ import {
   Plus,
   X,
   Mail,
-  MailOpen,
   Archive,
   Tag,
   Filter,
