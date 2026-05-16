@@ -103,20 +103,22 @@ router.post('/pause', apiLimiter, async (req, res, next) => {
     const { paused } = req.body;
     // We store queue pause state as a simple approach: set all queued posts to draft/scheduled
     if (paused) {
-      await supabase
+      const { error: pauseErr } = await supabase
         .from('posts')
         .update({ status: 'draft' })
         .not('queue_position', 'is', null)
         .eq('status', 'scheduled');
 
+      if (pauseErr) throw pauseErr;
       logger.info('Queue paused — all queued posts set to draft');
     } else {
-      await supabase
+      const { error: resumeErr } = await supabase
         .from('posts')
         .update({ status: 'scheduled' })
         .not('queue_position', 'is', null)
         .eq('status', 'draft');
 
+      if (resumeErr) throw resumeErr;
       logger.info('Queue resumed — all queued posts set to scheduled');
     }
 

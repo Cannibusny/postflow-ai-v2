@@ -118,7 +118,7 @@ export default function CalendarView() {
     if (!dragPost) return;
 
     const oldDate = dragPost.scheduled_date ? new Date(dragPost.scheduled_date) : new Date();
-    const newDate = new Date(dayKey);
+    const newDate = new Date(dayKey + 'T00:00:00');
     newDate.setHours(oldDate.getHours(), oldDate.getMinutes(), 0, 0);
 
     try {
