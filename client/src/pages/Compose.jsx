@@ -19,9 +19,18 @@ import {
   Twitter,
   Linkedin,
   Music2,
+  Sparkles,
+  ImagePlus,
+  Shield,
+  Target,
 } from 'lucide-react';
 import { api, PLATFORMS, CHAR_LIMITS, PLATFORM_MAP } from '../utils/api';
 import InstagramPreview from '../components/InstagramPreview';
+import AIContentModal from '../components/AIContentModal';
+import AIImageModal from '../components/AIImageModal';
+import ComplianceModal from '../components/ComplianceModal';
+import PredictiveScoreModal from '../components/PredictiveScoreModal';
+import HashtagSuggestions from '../components/HashtagSuggestions';
 
 const PLATFORM_ICONS = { instagram: Instagram, facebook: Facebook, twitter: Twitter, linkedin: Linkedin, tiktok: Music2 };
 
@@ -62,6 +71,10 @@ export default function Compose() {
   const [previewPlatform, setPreviewPlatform] = useState('instagram');
   const [showCustomize, setShowCustomize] = useState(false);
   const [platformCustomizations, setPlatformCustomizations] = useState({});
+  const [showAIContent, setShowAIContent] = useState(false);
+  const [showAIImage, setShowAIImage] = useState(false);
+  const [showCompliance, setShowCompliance] = useState(false);
+  const [showPredictive, setShowPredictive] = useState(false);
 
   useEffect(() => {
     if (editId) loadPost(editId);
@@ -279,6 +292,40 @@ export default function Compose() {
               )}
             </div>
 
+            {/* AI Tools Bar */}
+            <div className="flex flex-wrap gap-2 mb-4 p-3 bg-gradient-to-r from-purple-500/5 to-pink-500/5 border border-purple-500/20 rounded-xl">
+              <button
+                onClick={() => setShowAIContent(true)}
+                className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 hover:from-purple-600/30 hover:to-pink-600/30 border border-purple-500/30 rounded-lg text-xs font-medium text-purple-300 transition-all"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                Generate with AI
+              </button>
+              <button
+                onClick={() => setShowAIImage(true)}
+                className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-cyan-600/20 to-blue-600/20 hover:from-cyan-600/30 hover:to-blue-600/30 border border-cyan-500/30 rounded-lg text-xs font-medium text-cyan-300 transition-all"
+              >
+                <ImagePlus className="w-3.5 h-3.5" />
+                Generate Image
+              </button>
+              <button
+                onClick={() => setShowPredictive(true)}
+                disabled={!activeCaption.trim()}
+                className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-emerald-600/20 to-teal-600/20 hover:from-emerald-600/30 hover:to-teal-600/30 border border-emerald-500/30 rounded-lg text-xs font-medium text-emerald-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              >
+                <Target className="w-3.5 h-3.5" />
+                Predict Score
+              </button>
+              <button
+                onClick={() => setShowCompliance(true)}
+                disabled={!activeCaption.trim()}
+                className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-amber-600/20 to-red-600/20 hover:from-amber-600/30 hover:to-red-600/30 border border-amber-500/30 rounded-lg text-xs font-medium text-amber-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              >
+                <Shield className="w-3.5 h-3.5" />
+                Compliance Check
+              </button>
+            </div>
+
             {/* Caption Variants */}
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
@@ -342,8 +389,20 @@ export default function Compose() {
               )}
             </div>
 
+            {/* Hashtag AI Suggestions */}
+            <HashtagSuggestions
+              caption={activeCaption}
+              platforms={form.platforms}
+              existingHashtags={form.hashtags}
+              onAddHashtag={(tag) => {
+                if (!form.hashtags.includes(tag) && form.hashtags.length < 30) {
+                  setForm({ ...form, hashtags: [...form.hashtags, tag] });
+                }
+              }}
+            />
+
             {/* Hashtags */}
-            <div className="mb-4">
+            <div className="mb-4 mt-4">
               <span className="text-sm font-medium text-gray-300 block mb-2">
                 Hashtags ({form.hashtags.length}/30)
               </span>
@@ -416,6 +475,13 @@ export default function Compose() {
                 <p className="text-xs text-gray-600 mt-1">
                   Supports JPG, PNG, WebP up to 10 images
                 </p>
+                <button
+                  onClick={() => setShowAIImage(true)}
+                  className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 rounded-lg text-xs font-medium text-white transition-all"
+                >
+                  <ImagePlus className="w-3.5 h-3.5" />
+                  Generate with AI
+                </button>
               </div>
             </div>
 
@@ -598,6 +664,52 @@ export default function Compose() {
           </div>
         </div>
       </div>
+
+      {/* AI Modals */}
+      {showAIContent && (
+        <AIContentModal
+          onClose={() => setShowAIContent(false)}
+          platforms={form.platforms}
+          onSelect={(text) => {
+            const updated = [...variants];
+            updated[selectedVariant] = {
+              ...updated[selectedVariant],
+              caption_text: text,
+            };
+            setVariants(updated);
+          }}
+        />
+      )}
+
+      {showAIImage && (
+        <AIImageModal
+          onClose={() => setShowAIImage(false)}
+          onSelect={(url) => {
+            setForm({ ...form, image_url: url });
+          }}
+        />
+      )}
+
+      {showCompliance && (
+        <ComplianceModal
+          onClose={() => setShowCompliance(false)}
+          caption={activeCaption}
+          onEdit={() => setShowCompliance(false)}
+          onOverride={() => {
+            setShowCompliance(false);
+          }}
+        />
+      )}
+
+      {showPredictive && (
+        <PredictiveScoreModal
+          onClose={() => setShowPredictive(false)}
+          caption={activeCaption}
+          hashtags={form.hashtags}
+          platforms={form.platforms}
+          scheduledTime={scheduledDate}
+        />
+      )}
     </div>
   );
 }

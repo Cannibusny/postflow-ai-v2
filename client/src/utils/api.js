@@ -109,6 +109,18 @@ export const api = {
     apiFetch('/reports/scheduled', { method: 'POST', body: JSON.stringify(data) }),
   deleteScheduledReport: (id) =>
     apiFetch(`/reports/scheduled/${id}`, { method: 'DELETE' }),
+
+  // AI
+  generateContent: (data) =>
+    apiFetch('/ai/generate-content', { method: 'POST', body: JSON.stringify(data) }),
+  generateImage: (data) =>
+    apiFetch('/ai/generate-image', { method: 'POST', body: JSON.stringify(data) }),
+  complianceCheck: (data) =>
+    apiFetch('/ai/compliance-check', { method: 'POST', body: JSON.stringify(data) }),
+  predictScore: (data) =>
+    apiFetch('/ai/predict-score', { method: 'POST', body: JSON.stringify(data) }),
+  suggestHashtags: (data) =>
+    apiFetch('/ai/suggest-hashtags', { method: 'POST', body: JSON.stringify(data) }),
 };
 
 export const PLATFORMS = [
