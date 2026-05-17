@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { supabase } = require('../services/supabaseClient');
+const supabase = require('../utils/supabase');
 const logger = require('../utils/logger');
 
 // --------------- AI Content Generation ---------------
