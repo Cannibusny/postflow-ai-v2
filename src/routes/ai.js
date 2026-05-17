@@ -22,6 +22,7 @@ router.post('/generate-content', async (req, res) => {
     }
 
     let variations;
+    let usedAI = false;
     const claudeKey = process.env.ANTHROPIC_API_KEY;
 
     if (claudeKey) {
@@ -60,6 +61,7 @@ Return ONLY valid JSON with this exact format:
         if (jsonMatch) {
           const parsed = JSON.parse(jsonMatch[0]);
           variations = parsed.variations;
+          usedAI = true;
         }
       }
     }
@@ -78,11 +80,11 @@ Return ONLY valid JSON with this exact format:
         generation_type: 'content',
         prompt,
         result: { variations },
-        model: claudeKey ? 'claude-sonnet-4-20250514' : 'demo',
+        model: usedAI ? 'claude-sonnet-4-20250514' : 'demo',
       });
     }
 
-    res.json({ variations, model: claudeKey ? 'claude' : 'demo' });
+    res.json({ variations, model: usedAI ? 'claude' : 'demo' });
   } catch (err) {
     logger.error('AI content generation failed:', err);
     res.status(500).json({ error: 'Content generation failed' });
@@ -106,6 +108,7 @@ router.post('/generate-image', async (req, res) => {
     }
 
     let imageUrl;
+    let usedAI = false;
     const openaiKey = process.env.OPENAI_API_KEY;
 
     if (openaiKey) {
@@ -127,6 +130,7 @@ router.post('/generate-image', async (req, res) => {
       if (response.ok) {
         const data = await response.json();
         imageUrl = data.data[0].url;
+        usedAI = true;
       }
     }
 
@@ -139,11 +143,11 @@ router.post('/generate-image', async (req, res) => {
         generation_type: 'image',
         prompt,
         result: { url: imageUrl },
-        model: openaiKey ? 'dall-e-3' : 'demo',
+        model: usedAI ? 'dall-e-3' : 'demo',
       });
     }
 
-    res.json({ url: imageUrl, model: openaiKey ? 'dall-e-3' : 'demo' });
+    res.json({ url: imageUrl, model: usedAI ? 'dall-e-3' : 'demo' });
   } catch (err) {
     logger.error('AI image generation failed:', err);
     res.status(500).json({ error: 'Image generation failed' });
@@ -154,7 +158,7 @@ router.post('/generate-image', async (req, res) => {
 
 const COMPLIANCE_RULES = [
   {
-    pattern: /\b(cure[sd]?|treat[s]?|heal[s]?|remed[y|ies]|medical benefit|therapeutic)\b/i,
+    pattern: /\b(cure[sd]?|treat[s]?|heal[s]?|remed(?:y|ies)|medical benefit|therapeutic)\b/i,
     category: 'Health Claims',
     severity: 'high',
     message: 'Cannot make health or medical claims about cannabis products',
@@ -401,6 +405,7 @@ router.post('/predict-score', async (req, res) => {
     }
 
     let result;
+    let usedAI = false;
     const claudeKey = process.env.ANTHROPIC_API_KEY;
 
     if (claudeKey) {
@@ -443,6 +448,7 @@ Return ONLY valid JSON:
         const jsonMatch = content.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           result = JSON.parse(jsonMatch[0]);
+          usedAI = true;
         }
       }
     }
@@ -462,7 +468,7 @@ Return ONLY valid JSON:
       });
     }
 
-    res.json({ ...result, model: claudeKey ? 'claude' : 'rules-engine' });
+    res.json({ ...result, model: usedAI ? 'claude' : 'rules-engine' });
   } catch (err) {
     logger.error('Predictive scoring failed:', err);
     res.status(500).json({ error: 'Scoring failed' });
@@ -565,6 +571,7 @@ router.post('/suggest-hashtags', async (req, res) => {
     }
 
     let suggestions;
+    let usedAI = false;
     const claudeKey = process.env.ANTHROPIC_API_KEY;
 
     if (claudeKey) {
@@ -603,6 +610,7 @@ Popularity: "high" (>5M posts), "medium" (500K-5M), "low" (<500K)`,
         if (jsonMatch) {
           const parsed = JSON.parse(jsonMatch[0]);
           suggestions = parsed.hashtags;
+          usedAI = true;
         }
       }
     }
@@ -635,11 +643,11 @@ Popularity: "high" (>5M posts), "medium" (500K-5M), "low" (<500K)`,
         generation_type: 'hashtags',
         prompt: caption,
         result: { hashtags: suggestions },
-        model: claudeKey ? 'claude' : 'keyword-matching',
+        model: usedAI ? 'claude' : 'keyword-matching',
       });
     }
 
-    res.json({ hashtags: suggestions, model: claudeKey ? 'claude' : 'keyword-matching' });
+    res.json({ hashtags: suggestions, model: usedAI ? 'claude' : 'keyword-matching' });
   } catch (err) {
     logger.error('Hashtag suggestion failed:', err);
     res.status(500).json({ error: 'Hashtag suggestion failed' });
