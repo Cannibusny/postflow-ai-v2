@@ -87,6 +87,11 @@ export default function VoiceInput({ platforms, onResult }) {
   }
 
   function handleDismiss() {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+    }
+    setRecording(false);
     setTranscript('');
     setPolished(null);
     setError('');
