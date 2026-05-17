@@ -14,6 +14,8 @@ import {
   Upload,
   ChevronDown,
   ChevronUp,
+  Copy,
+  TrendingUp,
 } from 'lucide-react';
 import PostQueue from './pages/PostQueue';
 import CalendarView from './pages/CalendarView';
@@ -25,6 +27,8 @@ import Monitoring from './pages/Monitoring';
 import Reports from './pages/Reports';
 import Team from './pages/Team';
 import BulkUpload from './pages/BulkUpload';
+import CompetitorCloning from './pages/CompetitorCloning';
+import AdvancedAnalytics from './pages/AdvancedAnalytics';
 
 const primaryNav = [
   { to: '/', icon: ListChecks, label: 'Queue' },
@@ -39,6 +43,8 @@ const secondaryNav = [
   { to: '/reports', icon: FileText, label: 'Reports' },
   { to: '/team', icon: Users, label: 'Team' },
   { to: '/bulk-upload', icon: Upload, label: 'Bulk Upload' },
+  { to: '/competitor-cloning', icon: Copy, label: 'Competitor Clone' },
+  { to: '/advanced-analytics', icon: TrendingUp, label: 'Adv. Analytics' },
 ];
 
 export default function App() {
@@ -140,6 +146,8 @@ export default function App() {
           <Route path="/reports" element={<Reports />} />
           <Route path="/team" element={<Team />} />
           <Route path="/bulk-upload" element={<BulkUpload />} />
+          <Route path="/competitor-cloning" element={<CompetitorCloning />} />
+          <Route path="/advanced-analytics" element={<AdvancedAnalytics />} />
         </Routes>
       </main>
     </div>

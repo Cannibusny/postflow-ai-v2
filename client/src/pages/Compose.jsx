@@ -23,6 +23,7 @@ import {
   ImagePlus,
   Shield,
   Target,
+  ShieldAlert,
 } from 'lucide-react';
 import { api, PLATFORMS, CHAR_LIMITS, PLATFORM_MAP } from '../utils/api';
 import InstagramPreview from '../components/InstagramPreview';
@@ -31,6 +32,8 @@ import AIImageModal from '../components/AIImageModal';
 import ComplianceModal from '../components/ComplianceModal';
 import PredictiveScoreModal from '../components/PredictiveScoreModal';
 import HashtagSuggestions from '../components/HashtagSuggestions';
+import VoiceInput from '../components/VoiceInput';
+import CrisisDetectionModal from '../components/CrisisDetectionModal';
 
 const PLATFORM_ICONS = { instagram: Instagram, facebook: Facebook, twitter: Twitter, linkedin: Linkedin, tiktok: Music2 };
 
@@ -75,9 +78,17 @@ export default function Compose() {
   const [showAIImage, setShowAIImage] = useState(false);
   const [showCompliance, setShowCompliance] = useState(false);
   const [showPredictive, setShowPredictive] = useState(false);
+  const [showCrisis, setShowCrisis] = useState(false);
 
   useEffect(() => {
     if (editId) loadPost(editId);
+    const prefill = searchParams.get('prefill');
+    if (prefill) {
+      const updated = [...variants];
+      updated[0] = { ...updated[0], caption_text: prefill };
+      setVariants(updated);
+      setSelectedVariant(0);
+    }
   }, [editId]);
 
   async function loadPost(id) {
@@ -324,6 +335,25 @@ export default function Compose() {
                 <Shield className="w-3.5 h-3.5" />
                 Compliance Check
               </button>
+              <button
+                onClick={() => setShowCrisis(true)}
+                disabled={!activeCaption.trim()}
+                className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-orange-600/20 to-red-600/20 hover:from-orange-600/30 hover:to-red-600/30 border border-orange-500/30 rounded-lg text-xs font-medium text-orange-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              >
+                <ShieldAlert className="w-3.5 h-3.5" />
+                Crisis Check
+              </button>
+              <VoiceInput
+                platforms={form.platforms}
+                onResult={(text) => {
+                  const updated = [...variants];
+                  updated[selectedVariant] = {
+                    ...updated[selectedVariant],
+                    caption_text: text,
+                  };
+                  setVariants(updated);
+                }}
+              />
             </div>
 
             {/* Caption Variants */}
@@ -708,6 +738,24 @@ export default function Compose() {
           hashtags={form.hashtags}
           platforms={form.platforms}
           scheduledTime={scheduledDate}
+        />
+      )}
+
+      {showCrisis && (
+        <CrisisDetectionModal
+          onClose={() => setShowCrisis(false)}
+          caption={activeCaption}
+          onEdit={() => setShowCrisis(false)}
+          onOverride={() => setShowCrisis(false)}
+          onUseReframed={(text) => {
+            const updated = [...variants];
+            updated[selectedVariant] = {
+              ...updated[selectedVariant],
+              caption_text: text,
+            };
+            setVariants(updated);
+            setShowCrisis(false);
+          }}
         />
       )}
     </div>

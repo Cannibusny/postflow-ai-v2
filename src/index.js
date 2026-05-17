@@ -15,6 +15,7 @@ const notesRouter = require('./routes/notes');
 const monitoringRouter = require('./routes/monitoring');
 const reportsRouter = require('./routes/reports');
 const aiRouter = require('./routes/ai');
+const aiPhase4Router = require('./routes/ai-phase4');
 const scheduler = require('./jobs/scheduler');
 
 const app = express();
@@ -51,6 +52,7 @@ app.use('/api/notes', authMiddleware, notesRouter);
 app.use('/api/monitoring', authMiddleware, monitoringRouter);
 app.use('/api/reports', authMiddleware, reportsRouter);
 app.use('/api/ai', authMiddleware, aiRouter);
+app.use('/api/ai', authMiddleware, aiPhase4Router);
 
 // --------------- Serve React dashboard ---------------
 const clientDist = path.join(__dirname, '..', 'client', 'dist');

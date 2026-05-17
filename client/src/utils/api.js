@@ -121,6 +121,19 @@ export const api = {
     apiFetch('/ai/predict-score', { method: 'POST', body: JSON.stringify(data) }),
   suggestHashtags: (data) =>
     apiFetch('/ai/suggest-hashtags', { method: 'POST', body: JSON.stringify(data) }),
+
+  // AI Phase 4
+  voiceToPost: (data) =>
+    apiFetch('/ai/voice-to-post', { method: 'POST', body: JSON.stringify(data) }),
+  analyzeCompetitor: (data) =>
+    apiFetch('/ai/analyze-competitor', { method: 'POST', body: JSON.stringify(data) }),
+  crisisCheck: (data) =>
+    apiFetch('/ai/crisis-check', { method: 'POST', body: JSON.stringify(data) }),
+  getCompetitors: () => apiFetch('/ai/competitors'),
+  addCompetitor: (data) =>
+    apiFetch('/ai/competitors', { method: 'POST', body: JSON.stringify(data) }),
+  deleteCompetitor: (id) =>
+    apiFetch(`/ai/competitors/${id}`, { method: 'DELETE' }),
 };
 
 export const PLATFORMS = [
