@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { usePosts } from '../hooks/usePosts';
 import { api, PLATFORM_MAP } from '../utils/api';
 import { PlatformBadgeRow } from '../components/PlatformBadge';
+import JsonLd from '../components/JsonLd';
+import { buildPostListSchemas, buildImageGallerySchema } from '../utils/schemaMarkup';
 import {
   startOfMonth,
   endOfMonth,
@@ -148,8 +150,13 @@ export default function CalendarView() {
 
   const unscheduledPosts = filteredPosts.filter((p) => !p.scheduled_date);
 
+  const postSchemas = buildPostListSchemas(filteredPosts);
+  const gallerySchema = buildImageGallerySchema(filteredPosts);
+  const allSchemas = [...postSchemas, ...(gallerySchema ? [gallerySchema] : [])];
+
   return (
     <div className="flex gap-6">
+      {allSchemas.length > 0 && <JsonLd schema={allSchemas} />}
       <div className="flex-1 min-w-0">
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
