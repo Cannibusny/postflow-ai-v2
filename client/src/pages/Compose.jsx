@@ -34,6 +34,8 @@ import PredictiveScoreModal from '../components/PredictiveScoreModal';
 import HashtagSuggestions from '../components/HashtagSuggestions';
 import VoiceInput from '../components/VoiceInput';
 import CrisisDetectionModal from '../components/CrisisDetectionModal';
+import JsonLd from '../components/JsonLd';
+import { buildSocialMediaPostingSchema } from '../utils/schemaMarkup';
 
 const PLATFORM_ICONS = { instagram: Instagram, facebook: Facebook, twitter: Twitter, linkedin: Linkedin, tiktok: Music2 };
 
@@ -237,8 +239,19 @@ export default function Compose() {
     setSaving(false);
   }
 
+  const currentPost = {
+    title: form.title,
+    caption_variants: variants,
+    selected_variant: selectedVariant,
+    scheduled_date: scheduledDate || null,
+    image_url: form.image_url,
+    media_urls: form.media_urls,
+  };
+  const composerSchema = form.title ? buildSocialMediaPostingSchema(currentPost) : null;
+
   return (
     <div className="max-w-6xl mx-auto">
+      {composerSchema && <JsonLd schema={composerSchema} />}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold">{editId ? 'Edit Post' : 'Create Post'}</h2>

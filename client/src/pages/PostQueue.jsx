@@ -16,6 +16,8 @@ import { usePosts } from '../hooks/usePosts';
 import { api } from '../utils/api';
 import { PlatformBadgeRow } from '../components/PlatformBadge';
 import CreatePostModal from '../components/CreatePostModal';
+import JsonLd from '../components/JsonLd';
+import { buildPostListSchemas } from '../utils/schemaMarkup';
 
 const STATUS_CONFIG = {
   draft: { icon: FileEdit, color: 'text-gray-400', bg: 'bg-gray-800', label: 'Draft' },
@@ -74,8 +76,11 @@ export default function PostQueue() {
     failed: posts.filter((p) => p.status === 'failed').length,
   };
 
+  const postSchemas = buildPostListSchemas(posts);
+
   return (
     <div>
+      {postSchemas.length > 0 && <JsonLd schema={postSchemas} />}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold">Post Queue</h2>
